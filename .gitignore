@@ -1,0 +1,7 @@
+backend/venv/
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/database/*.db
+frontend/node_modules/
+frontend/dist/
+.env

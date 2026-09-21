@@ -5,3 +5,10 @@ backend/database/*.db
 frontend/node_modules/
 frontend/dist/
 .env
+backend/__pycache__/
+backend/migrations/
+backend/.env.example
+backend/.vscode/
+backend/.pytest_cache/
+backend/.mypy_cache/
+backend/database/*.sqlite3

@@ -24,7 +24,11 @@ class SummarizationService:
         return result[0]['summary_text'].strip()
     def summarize(self, text, length='medium'):
         if length not in LENGTHS: raise ValueError('summary_length must be short, medium, or detailed.')
-        self.load(); chunks=chunk_text(text)
+        self.load()
+        # T5-small accepts about 512 input tokens. Word-based chunks can exceed
+        # that for PDFs with names, numbers, or other token-dense text, causing
+        # Transformers to silently truncate the end of each chunk.
+        chunks=chunk_text(text, tokenizer=self._pipeline.tokenizer, max_tokens=450)
         summaries=[self._summarize_piece(chunk,length) for chunk in chunks]
         combined=' '.join(summaries)
         if len(summaries)>1 and word_count(combined)>350:

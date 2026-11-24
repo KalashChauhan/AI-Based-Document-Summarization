@@ -1,6 +1,6 @@
 import time
 from flask import Blueprint, current_app, jsonify, request
-from services.preprocessing_service import clean_text, word_count
+=from services.preprocessing_service import clean_text, clean_summary, has_meaningful_content, word_count
 from services.document_service import extract_text
 from utils.file_validator import validate_file
 from models.database import create_record
@@ -9,7 +9,9 @@ summary_bp=Blueprint('summary',__name__)
 
 def response(text, filename, file_type, length):
     if len(text)>current_app.config['MAX_TEXT_CHARS']: raise ValueError('Text is too large. Please upload less than 500,000 characters.')
+    if not has_meaningful_content(text): raise ValueError('This document does not contain enough meaningful text to summarize. Please provide readable sentences or a longer passage.')
     start=time.perf_counter(); summary=current_app.extensions['summarizer'].summarize(text,length); elapsed=round(time.perf_counter()-start,2)
+    summary=clean_summary(summary)
     words=word_count(text); summary_words=word_count(summary)
     summary_id,document_id=create_record(filename,file_type,len(text),summary,length,words,summary_words,elapsed)
     return jsonify(success=True,id=summary_id,document_id=document_id,filename=filename,summary=summary,word_count=words,summary_word_count=summary_words,processing_time=elapsed)

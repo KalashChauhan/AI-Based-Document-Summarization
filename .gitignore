@@ -8,6 +8,7 @@ __pycache__/
 backend/venv/
 .env
 backend/.env
+backend/.env.example
 
 # Runtime data
 backend/uploads/*
@@ -20,3 +21,7 @@ frontend/dist/
 
 # Local IDE settings
 backend/.vscode/
+frontend/.vscode/
+frontend/package-lock.json
+frontend/package.json
+
